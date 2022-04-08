@@ -71,6 +71,15 @@ function lexclick(lexrespd) {
         document.getElementById('div_lex_main').style.display = 'none';
         document.getElementById('div_end').style.display = 'block';
         console.log(full_data);
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://europe-west3-rosy-phalanx-346619.cloudfunctions.net/lacon-quest-2");
+
+        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+
+        xhr.onload = () => console.log(xhr.responseText);
+
+        let data = '{ "message": ' + full_data + ',}';
+        xhr.send(data);
     }
 }
 
