@@ -166,11 +166,39 @@ function fillsrcs(src, i) {
         '<img class="ch_chars" id="' + src + '" src="" alt="Image could not be loaded!">';
 }
 
+
+function start() {
+    let password = document.querySelector('input[name="password"]').value;
+    if (password === "") {
+        return;
+    }
+    console.log(password);
+    
+    document.getElementById('div_start').style.display = 'none';
+    document.getElementById('div_lex_intro').style.display = 'block';
+
+
+    full_data = ['word_shown',
+        'valid',
+        'dummy',
+        'response',
+        'correct',
+        'response_time'
+    ].join('\t') + '\n';
+    window.lextale_items = lex_dict[lexlang];
+    document.querySelectorAll('.lg_en').forEach((e) => {
+        e.style.display = 'block';
+    });
+    basic_times.intro_shown = Date.now();
+}
+
 function select_lg() {
     let chkd = document.querySelector('input[name="lang"]:checked');
     if (chkd) {
         lexlang = chkd.value;
     }
+    console.log(lexlang.length);
+
     document.getElementById('div_start').style.display = 'none';
     document.getElementById('div_lex_intro').style.display = 'block';
     let selects;
