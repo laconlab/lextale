@@ -2,10 +2,7 @@
 
 let lexlang = 'en'; // English: 'en', German: 'de', Dutch: 'nl', Chinese: 'ch1', Chinese incl. English: 'ch2'
 
-let path_imgs = './ch_items/';
-
 document.addEventListener("DOMContentLoaded", function() {
-    preload_single('LEXTALE_CH_instructions.png', 'intro_ch');
     basic_times.page_loaded = Date.now();
     document.getElementById('finished_id').addEventListener("touchstart", touchstart, false);
     document.getElementById('finished_id').addEventListener("touchend", touchend, false);
@@ -36,12 +33,12 @@ let basic_times = {};
 let full_data;
 let corr_word = 0;
 let corr_nonword = 0;
-// citP.corr_word + '+' + citP.corr_nonword
 let start_time = 0;
 let bool_dict = {
     0: 'false',
     1: 'true'
 };
+let resp = {};
 
 function lexclick(lexrespd) {
     lexstim_item.response_time = Date.now() - start_time;
@@ -68,22 +65,12 @@ function lexclick(lexrespd) {
     ].join('\t') + '\n';
 
     document.activeElement.blur();
-    if (lextale_items.length > 20) {
+    if (lextale_items.length > 0) {
         lex_next();
     } else {
-        let lex_score = (corr_word / 40 * 100 + corr_nonword / 20 * 100) / 2;
         document.getElementById('div_lex_main').style.display = 'none';
         document.getElementById('div_end').style.display = 'block';
-
-        console.log('Correctly identified real words: ' + corr_word +
-            '\nCorrectly identified pseudo words: ' + corr_nonword +
-            '\nLexTALE score: ' + lex_score + '%');
-
-        document.getElementById('end_summary_id').innerHTML =
-            '<span style="font-variant: small-caps;">LexTALE score: <b>' + lex_score.toFixed(2) +
-            '%</span></b><br>Correctly identified real words: <b>' + corr_word +
-            '</b> (out of 40)<br>Correctly identified pseudo words: <b>' + corr_nonword +
-            '</b> (out of 20)' + get_times();
+        console.log(full_data);
     }
 }
 
@@ -100,38 +87,6 @@ function format_ms(milis) {
     var mins = Math.floor(milis / 1000 / 60);
     var secs = Math.round(milis / 1000 - (mins * 60)).toFixed();
     return '<b>' + mins + ' min ' + secs + ' s</b>';
-}
-
-function ch_ending() {
-    document.getElementById('div_lexch_main').style.display = 'none';
-    document.getElementById('div_end').style.display = 'block';
-    full_data = 'image\tchecked\tcorrect\n';
-    let corr_ch = 0;
-    let corr_nonch = 0;
-    lextale_items.forEach((dct) => {
-        let chekd = document.getElementById(dct.filename + '_cb').checked;
-        full_data += dct.filename + '\t' + chekd + '\t';
-        if (dct.valid == 1 && chekd == true) {
-            corr_ch++;
-            full_data += 'yes';
-        } else if (dct.valid == 0 && chekd == false) {
-            corr_nonch++;
-            full_data += 'yes';
-        } else {
-            full_data += 'no';
-        }
-        full_data += '\n';
-    });
-    let lex_score = (corr_ch / 60 * 100 + corr_nonch / 30 * 100) / 2; // same as "(a + 2 * b) / 120"
-    console.log('Correctly checked real characters: ' + corr_ch +
-        '\nCorrectly not checked pseudo characters: ' + corr_nonch +
-        '\nLexTALE_CH score: ' + lex_score + '%');
-
-    document.getElementById('end_summary_id').innerHTML =
-        '<span style="font-variant: small-caps;">LexTALE_CH score: <b>' + lex_score.toFixed(2) +
-        '%</span></b><br>Correctly <i>checked</i> real characters: <b>' + corr_ch +
-        '</b> (out of 60)<br>Correctly <i>not checked</i> pseudo characters: <b>' + corr_nonch +
-        '</b> (out of 30)' + get_times();
 }
 
 function show_feed() {
@@ -173,12 +128,78 @@ function start() {
         return;
     }
     console.log(password);
+
+    let gen = document.querySelector('input[name="gen"]:checked');
+    if (gen === null) {
+        return;
+    }
+    console.log(gen.value);
+
+    let bday = document.querySelector('input[name="bday"]').value;
+    if (bday === "") {
+        return;
+    }
+    console.log(bday);
+
+    let mlan = document.querySelector('input[name="mlan"]').value;
+    if (mlan === "") {
+        return;
+    }
+    console.log(mlan);
+
+    let fak = document.querySelector('input[name="fak"]').value;
+    if (fak === "") {
+        return;
+    }
+    console.log(fak);
+
+    let gs = document.querySelector('input[name="gs"]').value;
+    if (gs === "") {
+        return;
+    }
+    console.log(gs);
+
+    let izl = document.querySelector('input[name="izl"]').value;
+    if (izl === "") {
+        return;
+    }
+    console.log(izl);
+
+    let pu = document.querySelector('input[name="pu"]').value;
+    if (pu === "") {
+        return;
+    }
+    console.log(pu);
+
+    let engl = document.querySelector('#engl').value;
+    console.log(engl);
+
+    let ptime = document.querySelector('input[name="ptime"]:checked');
+    if (ptime === null) {
+        return;
+    }
+    console.log(ptime.value);
+
+
     
     document.getElementById('div_start').style.display = 'none';
     document.getElementById('div_lex_intro').style.display = 'block';
 
+    
+    full_data = ['Sifra: ' + password,
+        'Spol: ' + gen.value,
+        'Godina rodenha: ' + bday,
+        'Materinski jezik: ' + mlan,
+        'Fakultet: ' + fak,
+        'Godina studija: ' + gs,
+        'Navedite dob (u godinama starosti) početka izloženosti engleskom jeziku: ' + izl,
+        'Navedite dob (u godinama starosti) u kojoj ste počeli učiti engleski jezik: ' + pu,
+        'Odaberite tvrdnju koja najbolje opisuje Vaše znanje engleskog jezika: ' + engl,
+        'Procijenite ukupno vrijeme koje provodite služeći se engleskim jezikom: ' + ptime.value,
+        '\n'
+    ].join('\n');
 
-    full_data = ['word_shown',
+    full_data += ['word_shown',
         'valid',
         'dummy',
         'response',
@@ -192,89 +213,11 @@ function start() {
     basic_times.intro_shown = Date.now();
 }
 
-function select_lg() {
-    let chkd = document.querySelector('input[name="lang"]:checked');
-    if (chkd) {
-        lexlang = chkd.value;
-    }
-    console.log(lexlang.length);
-
-    document.getElementById('div_start').style.display = 'none';
-    document.getElementById('div_lex_intro').style.display = 'block';
-    let selects;
-    if (lexlang.length > 2) {
-        document.getElementById('startbuttn').style.marginLeft = '70%';
-        document.getElementById('startbuttn').style.display = 'none';
-        load_all_ch();
-        selects = document.querySelectorAll('.lg_' + lexlang + ', .lg_ch');
-    } else {
-        full_data = ['word_shown',
-            'valid',
-            'dummy',
-            'response',
-            'correct',
-            'response_time'
-        ].join('\t') + '\n';
-        window.lextale_items = lex_dict[lexlang];
-        selects = document.querySelectorAll('.lg_' + lexlang);
-    }
-    selects.forEach((elem) => {
-        elem.style.display = 'block';
-    });
-    basic_times.intro_shown = Date.now();
-}
-
-function load_pre_ch() {
-    preload_single('LEXTALE_CH_instruction_short1.png', 'intro_ch_short1');
-    preload_single('LEXTALE_CH_instruction_bottom.png', 'intro_ch_bottom');
-    preload_single('LEXTALE_CH_instruction_short2.png', 'intro_ch_short2');
-    preload_single('LEXTALE_CH_instruction_end.png', 'intro_ch_end');
-    preload_single('LEXTALE_CH_exampleitem01.png', 'corr1');
-    preload_single('LEXTALE_CH_exampleitem04.png', 'corr4');
-    let quests = document.querySelectorAll('.question_class');
-    quests.forEach((elem) => {
-        elem.src = path_imgs + 'LEXTALE_CH_instruction_question.png';
-    });
-    const example_srcs = ['LEXTALE_CH_exampleitem01.png', 'LEXTALE_CH_exampleitem02.png', 'LEXTALE_CH_exampleitem03.png', 'LEXTALE_CH_exampleitem04.png'];
-    document.getElementById('ch_list_examples').innerHTML = example_srcs.map(fillsrcs_ex).join('');
-    document.getElementById("LEXTALE_CH_exampleitem01.png").checked = true;
-    document.getElementById("LEXTALE_CH_exampleitem04.png").checked = true;
-    preloadAll(example_srcs)
-        .then(images => console.log("Examples loaded."))
-        .catch(err => {
-            console.error('Failed', err);
-            document.getElementById('loading_id').innerHTML = '<br><b>Failed to load example images! (For proper usage see  <a href="https://github.com/gasparl/lextale" target="_blank">https://github.com/gasparl/lextale</a>. See Console for more information about this specific error.)</b>';
-        });
-}
-
-function load_all_ch() {
-    window.lextale_items = lex_dict.ch;
-    const sources = lextale_items.map(dct => dct.filename);
-    document.getElementById('ch_list').innerHTML = sources.map(fillsrcs).join('');
-
-    preloadAll(sources)
-        .then(images => images_loaded())
-        .catch(err => {
-            console.error('Failed', err);
-            document.getElementById('loading_id').innerHTML = '<br><b>Failed to load test images! (For proper usage see  <a href="https://github.com/gasparl/lextale" target="_blank">https://github.com/gasparl/lextale</a>. See Console for more information about this specific error.)</b>';
-        });
-
-    let quests = document.querySelectorAll('.question_class');
-    quests.forEach((elem) => {
-        elem.src = path_imgs + 'LEXTALE_CH_instruction_question.png';
-    });
-}
-
 function lexmain() {
     basic_times.test_start = Date.now();
     document.getElementById('div_lex_intro').style.display = 'none';
-    if (lexlang.length > 2) {
-        document.getElementById('div_lexch_main').style.display = 'block';
-        window.scrollTo(0, 0);
-    } else {
-        document.getElementById('div_lex_main').style.display = 'block';
-        lex_next();
-    }
+    document.getElementById('div_lex_main').style.display = 'block';
+    lex_next();
 }
 
 function copy_to_clip(text) {
@@ -310,20 +253,6 @@ function dl_as_file(filename_to_dl, data_to_dl) {
 function neat_date() {
     var m = new Date();
     return m.getFullYear() + "" + ("0" + (m.getMonth() + 1)).slice(-2) + "" + ("0" + m.getDate()).slice(-2) + "" + ("0" + m.getHours()).slice(-2) + "" + ("0" + m.getMinutes()).slice(-2) + "" + ("0" + m.getSeconds()).slice(-2);
-}
-
-function preload_single(src, id) {
-    const img = document.getElementById(id);
-    img.onload = function() {
-        console.log("Loaded:", src);
-        if (id == 'intro_ch') {
-            load_pre_ch();
-        }
-    };
-    img.onerror = function() {
-        console.log("Failed:", src);
-    };
-    img.src = path_imgs + src;
 }
 
 const preload = src => new Promise(function(resolve, reject) {
