@@ -74,9 +74,7 @@ function lexclick(lexrespd) {
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "https://europe-west3-rosy-phalanx-346619.cloudfunctions.net/lacon-quest-2");
 
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Access-Control-Allow-Origin", "https://laconlab.github.io");
 
         xhr.onload = () => console.log(xhr.responseText);
 
