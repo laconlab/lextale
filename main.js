@@ -71,14 +71,13 @@ function lexclick(lexrespd) {
         document.getElementById('div_lex_main').style.display = 'none';
         document.getElementById('div_end').style.display = 'block';
         console.log(full_data);
+
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", "https://europe-west3-rosy-phalanx-346619.cloudfunctions.net/lacon-quest-2");
+        xhr.open("POST", "https://europe-west3-rosy-phalanx-346619.cloudfunctions.net/lacon-quest-2", true);
         xhr.setRequestHeader("Content-Type", "application/json");
 
-        xhr.onload = () => console.log(xhr.responseText);
-
-        let data = '{ "message": ' + full_data + ',}';
-        xhr.send(data);
+        let m = new Map([["message", full_data]]);
+        xhr.send(JSON.stringify(Object.fromEntries(m)));
     }
 }
 
