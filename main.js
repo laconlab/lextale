@@ -73,7 +73,7 @@ function lexclick(lexrespd) {
         console.log(full_data);
 
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", "https://europe-west3-rosy-phalanx-346619.cloudfunctions.net/lacon-quest-2", true);
+        xhr.open("POST", "https://europe-west3-rosy-phalanx-346619.cloudfunctions.net/lacon-quest-3", true);
         xhr.setRequestHeader("Content-Type", "application/json");
 
         let m = new Map([["message", full_data]]);
